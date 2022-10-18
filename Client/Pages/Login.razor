@@ -1,6 +1,11 @@
 ﻿@page "/Login"
 @using BlazorJwtLogin.Client.Models
+@using BlazorJwtLogin.Client.Services
+@using BlazorJwtLogin.Shared
 @layout LoginLayout
+@inject IJSRuntime js
+@inject IAuthService authService
+@inject NavigationManager navigation
 
 <div class="card">
     <div class="card-body my-2">
@@ -18,18 +23,48 @@
                 <InputPassword id="pw" class="form-control" @bind-Value="loginModel.Password"></InputPassword>
                 <ValidationMessage For="() => loginModel.Password"></ValidationMessage>
             </div>
-            <button class="btn btn-primary btn-block">Submit</button>
+            @if (IsSubmit)
+            {
+                <button class="btn btn-primary btn-block" type="button" disabled>
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    <span class="sr-only">Loading...</span>
+                </button>
+            }
+            else
+            {
+                <button class="btn btn-primary btn-block">Submit</button>
+            }
         </EditForm>
     </div>
 </div>
 
 @code {
-
+    private bool IsSubmit = false;
     private LoginModel loginModel = new LoginModel();
 
-    private void SubmitHandler()
+    private async Task SubmitHandler()
     {
-        Console.WriteLine($"{loginModel.Email} {loginModel.Password}");
+        //Console.WriteLine($"Email：{loginModel.Email} / Password：{loginModel.Password}");
+
+        IsSubmit = true;
+
+        UserInfo userInfo = new UserInfo()
+        {
+            Email = loginModel.Email,
+            Password = loginModel.Password
+        };
+
+        bool result = await authService.LoginAsync(userInfo);
+        if (result)
+        {
+            navigation.NavigateTo("/");
+        }
+        else
+        {
+            await js.InvokeVoidAsync("alert", "登入失敗");
+        }
+
+        IsSubmit = false;
     }
 
 }

@@ -1,7 +1,7 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
-using System.Net;
 using System.Security.Claims;
 using System.Text;
+using BlazorJwtLogin.Shared;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 
@@ -72,17 +72,4 @@ public class AuthController : ControllerBase
 
         return userToken;
     }
-}
-
-public class UserToken
-{
-    public string token { get; set; }
-    public HttpStatusCode StatusCode { get; set; }
-    public DateTime ExpireTime { get; set; }
-}
-
-public class UserInfo
-{
-    public string Email { get; set; }
-    public string Password { get; set; }
 }
