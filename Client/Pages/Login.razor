@@ -1,0 +1,35 @@
+﻿@page "/Login"
+@using BlazorJwtLogin.Client.Models
+@layout LoginLayout
+
+<div class="card">
+    <div class="card-body my-2">
+        <h3>Login</h3>
+        <hr/>
+        <EditForm Model="loginModel" OnValidSubmit="SubmitHandler">
+            <DataAnnotationsValidator/>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <InputText id="email" class="form-control" @bind-Value="loginModel.Email"></InputText>
+                <ValidationMessage For="() => loginModel.Email"></ValidationMessage>
+            </div>
+            <div class="form-group">
+                <label for="pw">Password</label>
+                <InputPassword id="pw" class="form-control" @bind-Value="loginModel.Password"></InputPassword>
+                <ValidationMessage For="() => loginModel.Password"></ValidationMessage>
+            </div>
+            <button class="btn btn-primary btn-block">Submit</button>
+        </EditForm>
+    </div>
+</div>
+
+@code {
+
+    private LoginModel loginModel = new LoginModel();
+
+    private void SubmitHandler()
+    {
+        Console.WriteLine($"{loginModel.Email} {loginModel.Password}");
+    }
+
+}
